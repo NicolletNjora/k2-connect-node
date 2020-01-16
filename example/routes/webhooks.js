@@ -7,8 +7,8 @@ const options = {
 	baseUrl: process.env.K2_BASE_URL
 }
 
-// Including the kopokopo module
-var K2 = require('kopokopo-node')(options)
+// Including the k2-connect-node module
+var K2 = require('k2-connect-node')(options)
 var Webhooks = K2.Webhooks
 var tokens = K2.TokenService
 var buyGoodsResource
@@ -124,7 +124,9 @@ router.post('/subscribe', function (req, res, next) {
 		eventType: req.body.event_type,
 		url: req.body.url,
 		webhookSecret: process.env.BUYGOODS_WEBHOOK_SECRET,
-		accessToken: token_details.access_token
+		accessToken: token_details.access_token,
+		scope: "till",
+		scopeReference: "55555"
 	}
 
 	Webhooks

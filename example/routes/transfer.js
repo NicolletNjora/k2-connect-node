@@ -7,8 +7,8 @@ const options = {
 	baseUrl: 'https://9284bede-3488-4b2b-a1e8-d6e9f8d86aff.mock.pstmn.io'
 }
 
-// Including the kopokopo module
-var K2 = require('kopokopo-node')(options)
+// Including the k2-connect-node module
+var K2 = require('k2-connect-node')(options)
 var TransferService = K2.TransferService
 
 // Put in another file and import when needed
