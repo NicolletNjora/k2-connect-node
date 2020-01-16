@@ -1,5 +1,5 @@
 {
-  "name": "kopokopo-node",
+  "name": "k2-connect-node",
   "version": "0.1.0",
   "description": "This is a Kopokopo module that allows you to consume webhooks",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/kopokopo/k2-connect-node.git"
+    "url": "git://github.com/NicolletNjora/k2-connect-node.git"
   },
   "devDependencies": {
     "chai": "^4.2.0",

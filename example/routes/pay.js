@@ -19,6 +19,7 @@ tokens
 	.then(response => {
 		// Developer can decide to store the token_details and track expiry
 		token_details = response
+		console.log(token_details)
 	})
 	.catch(error => {
 		console.log(error)

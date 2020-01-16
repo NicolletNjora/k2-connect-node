@@ -69,7 +69,7 @@ router.get('/result', function (req, res, next) {
 router.post('/receive', function (req, res, next) {
 
 	var stkOptions = {
-		tillNumber: process.env.K2_TILL_NUMBER,
+		tillNumber: "6666",
 		firstName: req.body.first_name,
 		lastName: req.body.last_name,
 		phone: req.body.phone,
