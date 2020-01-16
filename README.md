@@ -11,7 +11,7 @@ This is a module to assist developers in consuming Kopokopo's API
 To install run the following command on your project's directory:
 
 ```
-npm install --save k2-connect
+npm install --save k2-connect-node
 ```
 
 ## Initialisation
@@ -27,7 +27,7 @@ const options = {
 };
 
 //Including the kopokopo module
-var K2 = require("k2-connect")(options);
+var K2 = require("k2-connect-node")(options);
 ```
 
 Note: The `baseUrl` can be custom for testing purposes but we recommend using the sandbox base url during development.

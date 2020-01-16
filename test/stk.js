@@ -21,7 +21,7 @@ describe('StkService', function () {
 	describe('paymentRequest() ', function () {
 		beforeEach(() => {
 			nock(BASE_URL)
-				.post('/payment_requests')
+				.post('/api/v1/incoming_payments')
 				.reply(201, {}, response.location)
 		})
 

@@ -20,7 +20,7 @@ describe('PayService', function () {
 	describe('addPayRecipient()', function () {
 		beforeEach(() => {
 			nock(BASE_URL)
-				.post('/pay_recipients')
+				.post('/api/v1/pay_recipients')
 				.reply(201, {}, response.recipientsLocation)
 		})
 
@@ -221,7 +221,7 @@ describe('PayService', function () {
 	describe('sendPay() ', function () {
 		beforeEach(() => {
 			nock(BASE_URL)
-				.post('/payments')
+				.post('/api/v1/payments')
 				.reply(201, {}, response.location)
 		})
 
