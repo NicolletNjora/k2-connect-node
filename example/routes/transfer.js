@@ -75,14 +75,21 @@ router.get('/createsettlement', function (req, res, next) {
 })
 
 router.get('/status', function (req, res, next) {
+	res.render('status', {
+		resource_desc: 'transfer',
+		resource: 'transfer'
+	})
+})
+
+router.post('/status', function (req, res, next) {
 	TransferService
-		.settlementStatus({ accessToken: token_details.access_token, location:  process.env.K2_BASE_URL + '/transfer_status' })
+		.settlementStatus({ accessToken: token_details.access_token, location: req.body.location })
 		.then(response =>{
-			return res.render('transferstatus', { message: 'Transfer status is: ' + response })
+			return res.render('response', { message: 'Transfer status is: ' + response })
 		})
 		.catch(error => {
 			console.log(error)
-			return res.render('transferstatus', { message: 'Error: ' + error })
+			return res.render('response', { message: 'Error: ' + error })
 		})
 })
 

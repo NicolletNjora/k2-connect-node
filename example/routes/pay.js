@@ -83,14 +83,21 @@ router.post('/recipients', function (req, res, next) {
 })
 
 router.get('/status', function (req, res, next) {
+	res.render('status', {
+		resource_desc: 'pay',
+		resource: 'pay'
+	})
+})
+
+router.post('/status', function (req, res, next) {
 	PayService
-		.payStatus({ accessToken: token_details.access_token, location:  process.env.K2_BASE_URL + '/pay_status' })
+		.payStatus({ accessToken: token_details.access_token, location:  req.body.location })
 		.then(response => {
-			return res.render('paystatus', { message: 'Pay status is: ' + response })
+			return res.render('response', { message: 'Pay status is: ' +  JSON.stringify(response, null, 2) })
 		})
 		.catch(error => {
 			console.log(error)
-			return res.render('paystatus', { message: 'Error: ' + error })
+			return res.render('response', { message: 'Error: ' + error })
 		})
 })
 

@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    br
+    br
+    .container
+        transferstatusbr
+        .title.h3 Query status of !{resource_desc} request
+        br
+        form(action="/"+!{resource}+"/status", method="post")           
+            .form-group.row
+                label.col-sm-2.col-form-label Request Location
+                .col-sm-7
+                    input.form-control(name="location", type='string', placeholder='Enter Location' required)
+                    small.form-text.text-muted
+                        | Enter location
+            
+            br
+            .form-group.row
+                .col-sm-7
+                    button.btn.btn-success(type='submit') Get Status
+
+        
+      

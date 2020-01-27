@@ -28,6 +28,10 @@ tokens
 	})
 
 router.post('/', function (req, res, next) {
+	// console.log("I start here")
+	// // console.log(JSON.stringify(req.body))
+	// console.log(req.get('X-kopokopo-signature'))
+	// console.log("and end here")
 	Webhooks
 		.webhookHandler(req, res)
 		.then(response => {

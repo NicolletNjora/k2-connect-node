@@ -2,10 +2,8 @@ require('should')
 const expect = require('chai').expect
 const nock = require('nock')
 
-var TEST_ACCOUNT = require('./credentials').TEST_ACCOUNT
+var configs = require('./configs')
 const response = require('./response/pay')
-
-const BASE_URL = 'https://9284bede-3488-4b2b-a1e8-d6e9f8d86aff.mock.pstmn.io'
 
 var k2, pay
 
@@ -13,14 +11,14 @@ describe('PayService', function () {
 	this.timeout(5000)
 
 	before(function () {
-		k2 = require('../lib')(TEST_ACCOUNT)
+		k2 = require('../lib')(configs.TEST_ACCOUNT)
 		pay = k2.PayService
 	})
 
 	describe('addPayRecipient()', function () {
 		beforeEach(() => {
-			nock(BASE_URL)
-				.post('/api/v1/pay_recipients')
+			nock(configs.TEST_ACCOUNT.baseUrl)
+				.post('/api/'+configs.version+'/pay_recipients')
 				.reply(201, {}, response.recipientsLocation)
 		})
 
@@ -220,8 +218,8 @@ describe('PayService', function () {
 
 	describe('sendPay() ', function () {
 		beforeEach(() => {
-			nock(BASE_URL)
-				.post('/api/v1/payments')
+			nock(configs.TEST_ACCOUNT.baseUrl)
+				.post('/api/'+configs.version+'/payments')
 				.reply(201, {}, response.location)
 		})
 
@@ -307,15 +305,15 @@ describe('PayService', function () {
 
 	describe('payStatus()', function () {
 		beforeEach(() => {
-			nock(BASE_URL)
-				.get('/my_pay_request_location')
+			nock(configs.TEST_ACCOUNT.baseUrl)
+				.get('/api/'+configs.version+'/my_pay_request_location')
 				.reply(200, response.status)
 		})
 
 		describe('payStatus() request validation', function () {
 			it('#payStatus() has to have accessToken', function () {
 				var opts = {}
-				opts.location = BASE_URL + '/my_pay_request_location'
+				opts.location = configs.TEST_ACCOUNT.baseUrl + '/api/' + configs.version + '/my_pay_request_location'
 
 				return pay.payStatus(opts).should.be.rejectedWith(Error, { message: 'Access token can\'t be blank; ' })
 			})
@@ -332,7 +330,7 @@ describe('PayService', function () {
 			var opts = {}
 
 			opts.accessToken= 'hardToGuessKey'
-			opts.location = BASE_URL + '/my_pay_request_location'
+			opts.location = configs.TEST_ACCOUNT.baseUrl + '/api/' + configs.version + '/my_pay_request_location'
 
 			return pay.payStatus(opts).then(response => {
 				// expect an object back

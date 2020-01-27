@@ -3,8 +3,7 @@ const expect = require('chai').expect
 const nock = require('nock')
 var mocks = require('node-mocks-http')
 
-var TEST_ACCOUNT = require('./credentials').TEST_ACCOUNT
-const BASE_URL = 'https://9284bede-3488-4b2b-a1e8-d6e9f8d86aff.mock.pstmn.io'
+var configs = require('./configs')
 
 // Subscribe
 const response = require('./response/webhooks')
@@ -23,20 +22,22 @@ const stkunsuccessfulresult = require('./response/hooks/stkunsuccessfulresult')
 const payresult = require('./response/hooks/payresult')
 const transferresult = require('./response/hooks/transferresult')
 
+const webhookSecret = '10af7ad062a21d9c841877f87b7dec3dbe51aeb3'
+
 var k2, webhooks
 
 describe('Webhooks', function () {
 	this.timeout(5000)
 
 	before(function () {
-		k2 = require('../lib')(TEST_ACCOUNT)
+		k2 = require('../lib')(configs.TEST_ACCOUNT)
 		webhooks = k2.Webhooks
 	})
 
 	describe('subscribe()', function () {
 		beforeEach(() => {
-			nock(BASE_URL)
-				.post('/api/v1/webhook_subscriptions')
+			nock(configs.TEST_ACCOUNT.baseUrl)
+				.post('/api/'+ configs.version+'/webhook_subscriptions')
 				.reply(201, {}, response.subscribeLocation)
 		})
 
@@ -100,6 +101,28 @@ describe('Webhooks', function () {
 
 				return webhooks.subscribe(opts).should.be.rejectedWith(Error, { message: 'Access token can\'t be blank; ' })
 			})
+
+			it('#subscribe() must have scope', function () {
+				opts.eventType = 'buygoods_transaction_received'
+				opts.url = 'http://localhost:8000/test'
+				opts.webhookSecret = 'webhook_secret'
+				opts.accessToken = 'hardToGuessKey'
+				opts.scope = null
+				opts.scopeReference = '555555'
+
+				return webhooks.subscribe(opts).should.be.rejectedWith(Error, { message: 'Scope can\'t be blank; ' })
+			})
+
+			it('#subscribe() must have scopeReference', function () {
+				opts.eventType = 'buygoods_transaction_received'
+				opts.url = 'http://localhost:8000/test'
+				opts.webhookSecret = 'webhook_secret'
+				opts.accessToken = 'hardToGuessKey'
+				opts.scope = 'till'
+				opts.scopeReference = null
+
+				return webhooks.subscribe(opts).should.be.rejectedWith(Error, { message: 'Scope reference can\'t be blank; ' })
+			})
 		})
 
 		it('#subscribe() succeeds', () => {
@@ -134,7 +157,7 @@ describe('Webhooks', function () {
 					})
 					var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res).then(response => {
+					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 						expect(response.event.type).to.equal('Buygoods Transaction')
 
@@ -153,7 +176,7 @@ describe('Webhooks', function () {
 					})
 					var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res).then(response => {
+					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 						expect(response.event.type).to.equal('B2b Transaction')
 
@@ -172,7 +195,7 @@ describe('Webhooks', function () {
 					})
 					var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res).then(response => {
+					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 						expect(response.event.type).to.equal('Merchant to Merchant Transaction')
 
@@ -192,7 +215,7 @@ describe('Webhooks', function () {
 				})
 				var res = mocks.createResponse()
 
-				return webhooks.webhookHandler(req, res).then(response => {
+				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 					expect(response.event.type).to.equal('Buygoods Transaction Reversed')
 
@@ -211,7 +234,7 @@ describe('Webhooks', function () {
 				})
 				var res = mocks.createResponse()
 
-				return webhooks.webhookHandler(req, res).then(response => {
+				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 					expect(response.event.type).to.equal('Settlement')
 
@@ -230,7 +253,7 @@ describe('Webhooks', function () {
 				})
 				var res = mocks.createResponse()
 
-				return webhooks.webhookHandler(req, res).then(response => {
+				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 					expect(response.event.type).to.equal('Customer Created')
 
@@ -250,7 +273,7 @@ describe('Webhooks', function () {
 					})
 					var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res).then(response => {
+					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 						expect(response.event.type).to.equal('Payment Request')
 
@@ -269,7 +292,7 @@ describe('Webhooks', function () {
 					})
 					var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res).then(response => {
+					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 						expect(response.event.type).to.equal('Payment Request')
 
@@ -288,7 +311,7 @@ describe('Webhooks', function () {
 					})
 					var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res).then(response => {
+					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 						expect(response.status).to.equal('Sent')
 
@@ -307,7 +330,7 @@ describe('Webhooks', function () {
 					})
 					var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res).then(response => {
+					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
 						expect(response.status).to.equal('Pending')
 
