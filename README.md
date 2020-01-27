@@ -68,12 +68,13 @@ TokenService
 
 ```node
 const Webhooks = K2.Webhooks;
+const webhookSecret = 'my_webhook_secret'
 
 //Router or whatever server you are using
 router.post('/customercreated', function(req, res, next){  
     // Send message and capture the response or error
     Webhooks
-        .webhookHandler(req, res)
+        .webhookHandler(req, res, webhookSecret)
         .then( response => {
             console.log(response)
         })
@@ -90,7 +91,10 @@ const subscribeOptions = {
     eventType: 'buy_goods_received', 
     url: 'https://my-valid-url.com/endpoint', 
     webhookSecret: 'my_webhook_secret', 
-    accessToken: 'my_access_token' }
+    accessToken: 'my_access_token',
+    scope: 'till',
+	scopeReference: '555555'
+}
 
 Webhooks 
     .subscribe(subscribeOptions) 
