@@ -267,7 +267,7 @@ describe('Webhooks', function () {
 						url: '/webhook',
 						headers: {
 							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': '8eb07cb4106812eeb76e44b03ebf69beadaf69bdf00b8dd8b77c61bb1644c773',
+							'X-KopoKopo-Signature': '50cad81e0b34e4de3c5d5a66b9d67c65d3182c6c5554a255bc5be90a23ee6069',
 						},
 						body: stksuccessfulresult
 					})

@@ -192,7 +192,7 @@ describe('StkService', function () {
 
 			return stk.paymentRequest(opts).then(response => {
 
-				expect(response).to.equal('https://api-sandbox.kopokopo.com/payment_requests/247b1bd8-f5a0-4b71-a898-f62f67b8ae1c')
+				expect(response).to.equal('https://api-sandbox.kopokopo.com/incoming_payments/247b1bd8-f5a0-4b71-a898-f62f67b8ae1c')
 
 			})
 		})
@@ -238,7 +238,7 @@ describe('StkService', function () {
 				expect(typeof response).to.equal('object')
 
 				// Test result of status for the response
-				expect(response.payment_request.status).to.equal('Success')
+				expect(response.data.attributes.status).to.equal('Received')
 
 			})
 		})

@@ -112,69 +112,122 @@ describe('TransferService', function () {
 		})
 	})
 
-	describe('createSettlementAccount()', function () {
+	describe('createMerchantBankAccount()', function () {
 
 		beforeEach(() => {
 			nock(configs.TEST_ACCOUNT.baseUrl)
 				.post('/api/'+configs.version+'/merchant_bank_accounts')
-				.reply(201, {}, response.accountLocation)
+				.reply(201, {}, response.merchantAccountLocation)
 		})
-
-		describe('createSettlementAccount() validation', function () {
+	
+		describe('createMerchantBankAccount() validation', function () {
 			
-			it('#createSettlementAccount() has to have a bankRef', function () {
+			it('#createMerchantBankAccount() has to have a bankId', function () {
 				var opts = {}
-
+	
 				opts.accountName = 'my_account_name'
-				opts.bankBranchRef = '9ed38155-7d6f-11e3-83c3-5404a6144203'
+				opts.bankBranchId = '9ed38155-7d6f-11e3-83c3-5404a6144203'
 				opts.accountNumber = '1234567890'
 				opts.accessToken = 'hardToGuessKey'
-
-				return transfer.createSettlementAccount(opts)
-					.should.be.rejectedWith(Error, { message: 'Bank ref can\'t be blank; ' })
+	
+				return transfer.createMerchantBankAccount(opts)
+					.should.be.rejectedWith(Error, { message: 'Bank id can\'t be blank; ' })
 			})
-
-			it('#createSettlementAccount() has to have an accountName', function () {
+	
+			it('#createMerchantBankAccount() has to have an accountName', function () {
 				var opts = {}
-
-				opts.bankRef = '89076-9ed38155-7d6f-11e3-83c3-5404a6144203-adiu'
-				opts.bankBranchRef = '9ed38155-7d6f-11e3-83c3-5404a6144203'
+	
+				opts.bankId = '89076-9ed38155-7d6f-11e3-83c3-5404a6144203-adiu'
+				opts.bankBranchId = '9ed38155-7d6f-11e3-83c3-5404a6144203'
 				opts.accountNumber = '1234567890'
 				opts.accessToken = 'hardToGuessKey'
-
-				return transfer.createSettlementAccount(opts)
+	
+				return transfer.createMerchantBankAccount(opts)
 					.should.be.rejectedWith(Error, { message: 'Account name can\'t be blank; ' })
 			})
-
-			it('#createSettlementAccount() has to have an accessToken', function () {
+	
+			it('#createMerchantBankAccount() has to have an accessToken', function () {
 				var opts = {}
-
+	
 				opts.accountName = 'my_account_name'
-				opts.bankRef = '89076-9ed38155-7d6f-11e3-83c3-5404a6144203-adiu'
-				opts.bankBranchRef = '9ed38155-7d6f-11e3-83c3-5404a6144203'
+				opts.bankId = '89076-9ed38155-7d6f-11e3-83c3-5404a6144203-adiu'
+				opts.bankBranchId = '9ed38155-7d6f-11e3-83c3-5404a6144203'
 				opts.accountNumber = '1234567890'
-
-				return transfer.createSettlementAccount(opts)
+	
+				return transfer.createMerchantBankAccount(opts)
 					.should.be.rejectedWith(Error, { message: 'Access token can\'t be blank; ' })
 			})
 		})
-
-		it('#createSettlementAccount()', () => {
+	
+		it('#createMerchantBankAccount()', () => {
 			var opts = {}
 	
 			opts.accountName = 'my_account_name'
-			opts.bankRef = '89076-9ed38155-7d6f-11e3-83c3-5404a6144203-adiu'
-			opts.bankBranchRef = '9ed38155-7d6f-11e3-83c3-5404a6144203'
+			opts.bankId = '89076-9ed38155-7d6f-11e3-83c3-5404a6144203-adiu'
+			opts.bankBranchId = '9ed38155-7d6f-11e3-83c3-5404a6144203'
 			opts.accountNumber = '1234567890'
 			opts.accessToken = 'hardToGuessKey'
 	
 	
-			return transfer.createSettlementAccount(opts).then(response => {
+			return transfer.createMerchantBankAccount(opts).then(response => {
 				expect(response).to.equal('https://api-sandbox.kopokopo.com/merchant_bank_accounts/AB443D36-3757-44C1-A1B4-29727FB3111C')
 			})
 		})
 	})
 
+	describe('createMerchantWallet()', function () {
+
+		beforeEach(() => {
+			nock(configs.TEST_ACCOUNT.baseUrl)
+				.post('/api/'+configs.version+'/merchant_wallets')
+				.reply(201, {}, response.merchantWalletLocation)
+		})
+
+		describe('createMerchantWallet() validation', function () {
+			
+			it('#createMerchantWallet() has to have a msisdn', function () {
+				var opts = {}
+
+				opts.network = 'Safaricom'
+                opts.accessToken = 'hardToGuessKey'
+
+				return transfer.createMerchantWallet(opts)
+					.should.be.rejectedWith(Error, { message: 'Msisdn can\'t be blank; ' })
+			})
+
+			it('#createMerchantWallet() has to have a network', function () {
+				var opts = {}
+
+                opts.msisdn = '+254701234567'
+                opts.accessToken = 'hardToGuessKey'
+
+				return transfer.createMerchantWallet(opts)
+					.should.be.rejectedWith(Error, { message: 'Network can\'t be blank; ' })
+			})
+
+			it('#createMerchantWallet() has to have an accessToken', function () {
+				var opts = {}
+
+				opts.network = 'Safaricom'
+                opts.msisdn = '+254701234567'
+
+				return transfer.createMerchantWallet(opts)
+					.should.be.rejectedWith(Error, { message: 'Access token can\'t be blank; ' })
+			})
+		})
+
+		it('#createMerchantWallet()', () => {
+			var opts = {}
+	
+			opts.network = 'Safaricom'
+			opts.msisdn = '+254701234567'
+			opts.accessToken = 'hardToGuessKey'
+	
+			return transfer.createMerchantWallet(opts).then(response => {
+				expect(response).to.equal('https://api-sandbox.kopokopo.com/merchant_wallets/AB443D36-3757-44C1-A1B4-29727FB3111C')
+			})
+		})
+	})
 	describe('settlementStatus()', function () {
 		beforeEach(() => {
 			nock(configs.TEST_ACCOUNT.baseUrl)
@@ -223,7 +276,7 @@ describe('TransferService', function () {
 				expect(typeof response).to.equal('object')
 				
 				// Test result of status for the response
-				expect(response.status).to.equal('Pending')
+				expect(response.data.attributes.status).to.equal('Sent')
 
 			})
 		})

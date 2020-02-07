@@ -1,11 +1,11 @@
 module.exports = {
 	id: 'cac95329-9fa5-42f1-a4fc-c08af7b868fb',
-	resourceId: 'cdb5f11f-62df-e611-80ee-0aa34a9b2388',
-	topic: 'transaction_received',
+	topic: 'b2b_transaction_received',
 	created_at: '2017-01-20T22:45:12.790Z',
 	event: {
 		type: 'B2b Transaction',
 		resource: {
+			id: "ResourceID",
 			reference: 'KKPPLLMMNN',
 			origination_time: '2017-01-20T22:45:12.790Z',
 			sending_till: '119050',
