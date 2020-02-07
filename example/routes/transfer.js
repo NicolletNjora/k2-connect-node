@@ -52,8 +52,8 @@ router.post('/', function (req, res, next) {
 router.post('/createsettlement', function (req, res, next) {
 	var settlementAccountOpts = {
 		accountName: req.body.accountName,
-		bankRef: req.body.bankRef,
-		bankBranchRef: req.body.bankBranchRef,
+		bankId: req.body.bankId,
+		bankBranchId: req.body.bankBranchId,
 		accountNumber: req.body.accountNumber,
 		accessToken: token_details.access_token
 	}
