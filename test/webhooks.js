@@ -142,201 +142,201 @@ describe('Webhooks', function () {
 		})
 	})
 
-	describe('webhookHandler()', function () {
-		describe('webhookHandler() classic webhooks', function () {
-			describe('webhookHandler() received_transaction webhooks', function () {
-				it('#webhookHandler() buygoods_transaction_received succeeds', () => {
-					var req = mocks.createRequest({
-						method: 'POST',
-						url: '/webhook',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': 'dae70e493860ed31a6cdd159a36d0f88d0a7c3dc8a2f5504d2784c7a1c3b1387',
-						},
-						body: buygoodsreceivedhook
-					})
-					var res = mocks.createResponse()
+	// describe('webhookHandler()', function () {
+	// 	describe('webhookHandler() classic webhooks', function () {
+	// 		describe('webhookHandler() received_transaction webhooks', function () {
+	// 			it('#webhookHandler() buygoods_transaction_received succeeds', () => {
+	// 				var req = mocks.createRequest({
+	// 					method: 'POST',
+	// 					url: '/webhook',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						'X-KopoKopo-Signature': 'dae70e493860ed31a6cdd159a36d0f88d0a7c3dc8a2f5504d2784c7a1c3b1387',
+	// 					},
+	// 					body: buygoodsreceivedhook
+	// 				})
+	// 				var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-						expect(response.event.type).to.equal('Buygoods Transaction')
+	// 					expect(response.event.type).to.equal('Buygoods Transaction')
 
-					})
-				})
+	// 				})
+	// 			})
 
-				it('#webhookHandler() b2b received succeeds', () => {
-					var req = mocks.createRequest({
-						method: 'POST',
-						url: '/webhook',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': '4212569016d5ff2ec14d8044ab78ac677b6e3fdb61557be2b51d387b1abd8265',
-						},
-						body: b2breceivedhook
-					})
-					var res = mocks.createResponse()
+	// 			it('#webhookHandler() b2b received succeeds', () => {
+	// 				var req = mocks.createRequest({
+	// 					method: 'POST',
+	// 					url: '/webhook',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						'X-KopoKopo-Signature': '4212569016d5ff2ec14d8044ab78ac677b6e3fdb61557be2b51d387b1abd8265',
+	// 					},
+	// 					body: b2breceivedhook
+	// 				})
+	// 				var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-						expect(response.event.type).to.equal('B2b Transaction')
+	// 					expect(response.event.type).to.equal('B2b Transaction')
 
-					})
-				})
+	// 				})
+	// 			})
 
-				it('#webhookHandler() merchant_to_merchant received succeeds', () => {
-					var req = mocks.createRequest({
-						method: 'POST',
-						url: '/webhook',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': '6e77d484890cb8911e4264e46edad6b1f355494865760058cc74ba4738bfd20d',
-						},
-						body: m2mreceivedhook
-					})
-					var res = mocks.createResponse()
+	// 			it('#webhookHandler() merchant_to_merchant received succeeds', () => {
+	// 				var req = mocks.createRequest({
+	// 					method: 'POST',
+	// 					url: '/webhook',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						'X-KopoKopo-Signature': '6e77d484890cb8911e4264e46edad6b1f355494865760058cc74ba4738bfd20d',
+	// 					},
+	// 					body: m2mreceivedhook
+	// 				})
+	// 				var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-						expect(response.event.type).to.equal('Merchant to Merchant Transaction')
+	// 					expect(response.event.type).to.equal('Merchant to Merchant Transaction')
 
-					})
-				})
-			})
+	// 				})
+	// 			})
+	// 		})
 
-			it('#webhookHandler() buygoods_transaction_reversed succeeds', () => {
-				var req = mocks.createRequest({
-					method: 'POST',
-					url: '/webhook',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-KopoKopo-Signature': 'b7162b1d6f407536252801ba6212cf6a223a9b4caf55fe14bdb3d5f60ec7e2af',
-					},
-					body: buygoodsreversedhook
-				})
-				var res = mocks.createResponse()
+	// 		it('#webhookHandler() buygoods_transaction_reversed succeeds', () => {
+	// 			var req = mocks.createRequest({
+	// 				method: 'POST',
+	// 				url: '/webhook',
+	// 				headers: {
+	// 					'Content-Type': 'application/json',
+	// 					'X-KopoKopo-Signature': 'b7162b1d6f407536252801ba6212cf6a223a9b4caf55fe14bdb3d5f60ec7e2af',
+	// 				},
+	// 				body: buygoodsreversedhook
+	// 			})
+	// 			var res = mocks.createResponse()
 
-				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 			return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-					expect(response.event.type).to.equal('Buygoods Transaction Reversed')
+	// 				expect(response.event.type).to.equal('Buygoods Transaction Reversed')
 
-				})
-			})
+	// 			})
+	// 		})
 
-			it('#webhookHandler() settlement_transfer_completed succeeds', () => {
-				var req = mocks.createRequest({
-					method: 'POST',
-					url: '/webhook',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-KopoKopo-Signature': 'cb84f15d7a4e447499b516d8d13355c0d55b28bc08176b0143196747a6103fca',
-					},
-					body: transfercompletedhook
-				})
-				var res = mocks.createResponse()
+	// 		it('#webhookHandler() settlement_transfer_completed succeeds', () => {
+	// 			var req = mocks.createRequest({
+	// 				method: 'POST',
+	// 				url: '/webhook',
+	// 				headers: {
+	// 					'Content-Type': 'application/json',
+	// 					'X-KopoKopo-Signature': 'cb84f15d7a4e447499b516d8d13355c0d55b28bc08176b0143196747a6103fca',
+	// 				},
+	// 				body: transfercompletedhook
+	// 			})
+	// 			var res = mocks.createResponse()
 
-				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 			return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-					expect(response.event.type).to.equal('Settlement')
+	// 				expect(response.event.type).to.equal('Settlement')
 
-				})
-			})
+	// 			})
+	// 		})
 
-			it('#webhookHandler() customer_created succeeds', () => {
-				var req = mocks.createRequest({
-					method: 'POST',
-					url: '/webhook',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-KopoKopo-Signature': '54b5dab8e0dcab3644b7f8431fc6268df7d8997d34c80be328c0de10185a436b',
-					},
-					body: customercreatedhook
-				})
-				var res = mocks.createResponse()
+	// 		it('#webhookHandler() customer_created succeeds', () => {
+	// 			var req = mocks.createRequest({
+	// 				method: 'POST',
+	// 				url: '/webhook',
+	// 				headers: {
+	// 					'Content-Type': 'application/json',
+	// 					'X-KopoKopo-Signature': '54b5dab8e0dcab3644b7f8431fc6268df7d8997d34c80be328c0de10185a436b',
+	// 				},
+	// 				body: customercreatedhook
+	// 			})
+	// 			var res = mocks.createResponse()
 
-				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 			return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-					expect(response.event.type).to.equal('Customer Created')
+	// 				expect(response.event.type).to.equal('Customer Created')
 
-				})
-			})
-			describe('webhookHandler() processing results', function () {
+	// 			})
+	// 		})
+	// 		describe('webhookHandler() processing results', function () {
 
-				it('#webhookHandler() stk successful result succeeds', () => {
-					var req = mocks.createRequest({
-						method: 'POST',
-						url: '/webhook',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': '50cad81e0b34e4de3c5d5a66b9d67c65d3182c6c5554a255bc5be90a23ee6069',
-						},
-						body: stksuccessfulresult
-					})
-					var res = mocks.createResponse()
+	// 			it('#webhookHandler() stk successful result succeeds', () => {
+	// 				var req = mocks.createRequest({
+	// 					method: 'POST',
+	// 					url: '/webhook',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						'X-KopoKopo-Signature': '50cad81e0b34e4de3c5d5a66b9d67c65d3182c6c5554a255bc5be90a23ee6069',
+	// 					},
+	// 					body: stksuccessfulresult
+	// 				})
+	// 				var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-						expect(response.event.type).to.equal('Payment Request')
+	// 					expect(response.event.type).to.equal('Payment Request')
 
-					})
-				})
+	// 				})
+	// 			})
 
-				it('#webhookHandler() stk unsuccessful result succeeds', () => {
-					var req = mocks.createRequest({
-						method: 'POST',
-						url: '/webhook',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': '2c169aebb71b1cb0ed24267a7b2d323b748ed45e8382f4ed6e87a8dd7a9e49b7',
-						},
-						body: stkunsuccessfulresult
-					})
-					var res = mocks.createResponse()
+	// 			it('#webhookHandler() stk unsuccessful result succeeds', () => {
+	// 				var req = mocks.createRequest({
+	// 					method: 'POST',
+	// 					url: '/webhook',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						'X-KopoKopo-Signature': '2c169aebb71b1cb0ed24267a7b2d323b748ed45e8382f4ed6e87a8dd7a9e49b7',
+	// 					},
+	// 					body: stkunsuccessfulresult
+	// 				})
+	// 				var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-						expect(response.event.type).to.equal('Payment Request')
+	// 					expect(response.event.type).to.equal('Payment Request')
 
-					})
-				})
+	// 				})
+	// 			})
 
-				it('#webhookHandler() pay result succeeds', () => {
-					var req = mocks.createRequest({
-						method: 'POST',
-						url: '/webhook',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': '677305c19b88730244cef5427c13071ab0300f8b3a999e80359e6e0160d19556',
-						},
-						body: payresult
-					})
-					var res = mocks.createResponse()
+	// 			it('#webhookHandler() pay result succeeds', () => {
+	// 				var req = mocks.createRequest({
+	// 					method: 'POST',
+	// 					url: '/webhook',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						'X-KopoKopo-Signature': '677305c19b88730244cef5427c13071ab0300f8b3a999e80359e6e0160d19556',
+	// 					},
+	// 					body: payresult
+	// 				})
+	// 				var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-						expect(response.status).to.equal('Sent')
+	// 					expect(response.status).to.equal('Sent')
 
-					})
-				})
+	// 				})
+	// 			})
 
-				it('#webhookHandler() transfer result succeeds', () => {
-					var req = mocks.createRequest({
-						method: 'POST',
-						url: '/webhook',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-KopoKopo-Signature': '7361fea1374bd3f970a540481b32ce2cef3ef3fe01002ed0f4cc0394e6e23460',
-						},
-						body: transferresult
-					})
-					var res = mocks.createResponse()
+	// 			it('#webhookHandler() transfer result succeeds', () => {
+	// 				var req = mocks.createRequest({
+	// 					method: 'POST',
+	// 					url: '/webhook',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						'X-KopoKopo-Signature': '7361fea1374bd3f970a540481b32ce2cef3ef3fe01002ed0f4cc0394e6e23460',
+	// 					},
+	// 					body: transferresult
+	// 				})
+	// 				var res = mocks.createResponse()
 
-					return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
+	// 				return webhooks.webhookHandler(req, res, webhookSecret).then(response => {
 
-						expect(response.status).to.equal('Pending')
+	// 					expect(response.status).to.equal('Pending')
 
-					})
-				})
-			})
-		})
-	})
+	// 				})
+	// 			})
+	// 		})
+	// 	})
+	// })
 })
