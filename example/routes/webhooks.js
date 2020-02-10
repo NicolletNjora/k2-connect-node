@@ -129,7 +129,7 @@ router.post('/subscribe', function (req, res, next) {
 		url: req.body.url,
 		webhookSecret: process.env.BUYGOODS_WEBHOOK_SECRET,
 		accessToken: token_details.access_token,
-		scope: "till",
+		scope: "Till",
 		scopeReference: "55555"
 	}
 
