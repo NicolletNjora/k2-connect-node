@@ -92,7 +92,7 @@ const subscribeOptions = {
     url: 'https://my-valid-url.com/endpoint', 
     webhookSecret: 'my_webhook_secret', 
     accessToken: 'my_access_token',
-    scope: 'till',
+    scope: 'Till',
 	scopeReference: '555555'
 }
 
@@ -168,9 +168,10 @@ NB: The access token is required to send subsequent requests
   - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
   - `metadata`: It is a hash containing a maximum of 5 key value pairs
 
-- `StkService.paymentRequestStatus({ location })`:
+- `StkService.paymentRequestStatus({ location: 'location', accessToken: 'my_access_token' })`:
 
-  - `location`: The request location you get when you send a request
+  - `location`: The request location you get when you send a request `REQUIRED`
+  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
 For more information, please read <https://api-docs.kopokopo.com/#receive-payments-from-m-pesa-users-via-stk-push>
 
@@ -195,21 +196,29 @@ For more information, please read <https://api-docs.kopokopo.com/#receive-paymen
   - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
   - `metadata`: It is a hash containing a maximum of 5 key value pairs
 
-- `PayService.payStatus({ location })`:
+- `PayService.payStatus({ location: 'location', accessToken: 'my_access_token' })`:
 
-  - `location`: The request location you get when you send a request
+  - `location`: The request location you get when you send a request `REQUIRED`
+  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
 For more information, please read <https://api-docs.kopokopo.com/#send-money-pay>
 
 ### `TransferService`
 
-- `TransferService.createSettlementAccount({ accountOpts })`: `accountOpts`: A hash of objects containing the following keys:
+- `TransferService.createMerchantBankAccount({ accountOpts })`: `accountOpts`: A hash of objects containing the following keys:
 
   - `accountName`: Settlement Account Name `REQUIRED`
   - `bankRef`: Settlement Bank Reference `REQUIRED`
   - `bankBranchRef`: Settlement Bank Branch Reference `REQUIRED`
   - `accountNumber`: Settlement account number `REQUIRED`
   - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
+
+- `TransferService.createMerchantWallet({ accountOpts })`: `accountOpts`: A hash of objects containing the following keys:
+
+  - `network`: The mobile wallet's account `REQUIRED`
+  - `msisdn`: Msisdn(Phone number with the country code) `REQUIRED`
+  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
+
 
 - `TransferService.settleFunds({ settleOpts })`: `settleOpts`: A hash of objects containing the following keys:
 
@@ -218,9 +227,10 @@ For more information, please read <https://api-docs.kopokopo.com/#send-money-pay
   - `amount`: Amount to charge. `REQUIRED`
   - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
-- `TransferService.settlementStatus({ location })`:
+- `TransferService.settlementStatus({ location: 'location', accessToken: 'my_access_token' })`:
 
-  - `location`: The request location you get when you send a request
+  - `location`: The request location you get when you send a request `REQUIRED`
+  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
 For more information, please read <https://api-docs.kopokopo.com/#transfer-to-your-account-s>
 
