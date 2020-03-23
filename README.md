@@ -18,27 +18,27 @@ npm install --save k2-connect-node
 
 The package should be configured with your client id and client secret which you can get from your account on the kopokopo's app
 
-```node
+```javascript
 //Having stored your client id and client secret as environment variables
 const options = {
   clientId: process.env.K2_CLIENT_ID,
   clientSecret: process.env.K2_CLIENT_SECRET,
   baseUrl: process.env.K2_BASE_URL
-};
+}
 
 //Including the kopokopo module
-var K2 = require("k2-connect-node")(options);
+var K2 = require("k2-connect-node")(options)
 ```
 
 Note: The `baseUrl` can be custom for testing purposes but we recommend using the sandbox base url during development.
 
 ### After initialization, you can get instances of offered services as follows:
 
-- [Tokens](#tokenservice) : `var TokenService = K2.TokenService;`
-- [Webhooks](#webhooks) : `var Webhooks = K2.Webhooks;`
-- [STK PUSH](#stkservice) : `var StkService = K2.StkService;`
-- [Pay](#payservice) : `var PayService = K2.PayService;`
-- [Transfer](#transferservice) : `var TransferService = K2.TransferService;`
+- [Tokens](#tokenservice) : `var TokenService = K2.TokenService`
+- [Webhooks](#webhooks) : `var Webhooks = K2.Webhooks`
+- [STK PUSH](#stkservice) : `var StkService = K2.StkService`
+- [Pay](#payservice) : `var PayService = K2.PayService`
+- [Transfer](#transferservice) : `var TransferService = K2.TransferService`
 
 ## Usage
 
@@ -48,8 +48,8 @@ The package needs to be configured with your kopokopo's clientId and Secret Key,
 
 To send any requests to Kopokopo's API you'll need an access token
 
-```node
-const TokenService = K2.TokenService;
+```javascript
+const TokenService = K2.TokenService
 
 TokenService
     .getTokens()
@@ -58,16 +58,16 @@ TokenService
         console.log(response)
     })
     .catch( error => {
-        console.log(error);
-    });
+        console.log(error)
+    })
 ```
 
 ### Webhooks
 
 - Consuming
 
-```node
-const Webhooks = K2.Webhooks;
+```javascript
+const Webhooks = K2.Webhooks
 const webhookSecret = 'my_webhook_secret'
 
 //Router or whatever server you are using
@@ -79,21 +79,21 @@ router.post('/customercreated', function(req, res, next){
             console.log(response)
         })
         .catch( error => {
-            console.log(error);
-        });
+            console.log(error)
+        })
 })
 ```
 
 - Subscription
 
-```node
+```javascript
 const subscribeOptions = { 
     eventType: 'buy_goods_received', 
     url: 'https://my-valid-url.com/endpoint', 
     webhookSecret: 'my_webhook_secret', 
     accessToken: 'my_access_token',
     scope: 'Till',
-	scopeReference: '555555'
+	  scopeReference: '555555'
 }
 
 Webhooks 
@@ -102,10 +102,24 @@ Webhooks
     .catch(error => { console.log(error) })
 ```
 
+- Checking the webhook subscription
+
+```javascript
+statusOptions = { 
+    location: 'https://my-valid-url.com/endpoint', 
+    accessToken: 'my_access_token'
+}
+
+Webhooks 
+    .webhookSubscriptionStatus(statusOptions) 
+    .then(response => { console.log(response) }) 
+    .catch(error => { console.log(error) })
+```
+
 ### STK PUSH
 
-```node
-const StkService = K2.StkService;
+```javascript
+const StkService = K2.StkService
 
 var stkOptions = {
     tillNumber: 36546,
@@ -124,9 +138,7 @@ var stkOptions = {
       reference: '123456',
       notes: 'Payment for invoice 123456'
     }
-  };
-
-  // Send message and capture the response or error
+  }
 
   StkService
     .paymentRequest(stkOptions)
@@ -134,8 +146,8 @@ var stkOptions = {
       console.log(response)
     })
     .catch( error => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 ```
 
 For other usage examples check out the [example app](https://github.com/kopokopo/k2-connect-node/tree/master/example).
@@ -165,8 +177,8 @@ NB: The access token is required to send subsequent requests
   - `currency`: 3-digit ISO format currency code. `REQUIRED`
   - `amount`: Amount to charge. `REQUIRED`
   - `callbackUrl`: Url that the [result](#responsesandresults) will be posted to `REQUIRED`
-  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
   - `metadata`: It is a hash containing a maximum of 5 key value pairs
+  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
 - `StkService.paymentRequestStatus({ location: 'location', accessToken: 'my_access_token' })`:
 
@@ -179,12 +191,16 @@ For more information, please read <https://api-docs.kopokopo.com/#receive-paymen
 
 - `PayService.addPayRecipient({ payRecipientOptions })`: `payRecipientOptions`: A hash of objects containing the following keys:
 
-  - `type`: Customer's first name `REQUIRED`
+  - `type`: Pay recipient type `REQUIRED`
   - `firstName`: Pay recipient's first name `REQUIRED`
   - `lastName`: Pay recipient's last name `REQUIRED`
   - `phone`: Pay recipient's phone number `REQUIRED`
   - `email`: Pay recipient's email number
-  - `network`: Pay recipient's network `REQUIRED`
+  - `network`: Pay recipient's network `REQUIRED` for mobile wallet recipient
+  - `bankId`: Pay recipient's bank ID `REQUIRED` for bank account recipient
+  - `bankBranchId`: Pay recipient's bank branch ID `REQUIRED` for bank account recipient
+  - `accountNumber`: Pay recipient's account number `REQUIRED` for bank account recipient
+  - `accountName`: Pay recipient's account name `REQUIRED` for bank account recipient
   - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
 - `PayService.sendPay({ payOptions })`: `payOptions`: A hash of objects containing the following keys:
@@ -193,8 +209,8 @@ For more information, please read <https://api-docs.kopokopo.com/#receive-paymen
   - `currency`: 3-digit ISO format currency code. `REQUIRED`
   - `amount`: Amount to charge. `REQUIRED`
   - `callbackUrl`: Url that the [result](#responsesandresults) will be posted to `REQUIRED`
-  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
   - `metadata`: It is a hash containing a maximum of 5 key value pairs
+  - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
 - `PayService.payStatus({ location: 'location', accessToken: 'my_access_token' })`:
 
@@ -208,8 +224,8 @@ For more information, please read <https://api-docs.kopokopo.com/#send-money-pay
 - `TransferService.createMerchantBankAccount({ accountOpts })`: `accountOpts`: A hash of objects containing the following keys:
 
   - `accountName`: Settlement Account Name `REQUIRED`
-  - `bankRef`: Settlement Bank Reference `REQUIRED`
-  - `bankBranchRef`: Settlement Bank Branch Reference `REQUIRED`
+  - `bankId`: Settlement Bank ID `REQUIRED`
+  - `bankBranchId`: Settlement Bank Branch ID `REQUIRED`
   - `accountNumber`: Settlement account number `REQUIRED`
   - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
@@ -222,9 +238,14 @@ For more information, please read <https://api-docs.kopokopo.com/#send-money-pay
 
 - `TransferService.settleFunds({ settleOpts })`: `settleOpts`: A hash of objects containing the following keys:
 
-  - `destination`: The destination `REQUIRED FOR A TARGETED TRANSFER`
+  - `destinationType`: Thepletion - Transfers Simulation
+Spec Tests for Settlement Account Simulation
+3
+Assignee: Nicollet Njora destination `REQUIRED FOR A TARGETED TRANSFER`
+  - `destinationReference`: The destination `REQUIRED FOR A TARGETED TRANSFER`
   - `currency`: 3-digit ISO format currency code. `REQUIRED`
   - `amount`: Amount to charge. `REQUIRED`
+  - `callbackUrl`: Url that the result will be posted to REQUIRED
   - `accessToken`: Gotten from the [`TokenService`](#tokenservice) response `REQUIRED`
 
 - `TransferService.settlementStatus({ location: 'location', accessToken: 'my_access_token' })`:
@@ -238,7 +259,7 @@ For more information, please read <https://api-docs.kopokopo.com/#transfer-to-yo
 
 - All the post requests are asynchronous apart from `TokenService`. This means that the result will be posted to your custom callback url when the request is complete. The immediate response of the post requests contain the `location` url of the request you have sent which you can use to query the status.
 
-Note: The asynchronous results are processed like webhooks.
+Note: The asynchronous results are processed like webhooks but use the application secret instead of the webhook secret.
 
 ## Author
 
@@ -246,7 +267,7 @@ Note: The asynchronous results are processed like webhooks.
 
 ## Contributions
 
-We welcome those with open arms just make a pull request and we will review.
+We welcome contributions with open arms just make a pull request and we will review.
 
 ### Development
 
