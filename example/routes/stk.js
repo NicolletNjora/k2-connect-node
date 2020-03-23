@@ -37,7 +37,7 @@ router.get('/', function (req, res, next) {
 router.post('/result', function (req, res, next) {
 	// Send message and capture the response or error
 	Webhooks
-		.webhookHandler(req, res)
+		.webhookHandler(req, res, process.env.K2_CLIENT_SECRET)
 		.then(response => {
 			stkResource = response
 		})
@@ -50,19 +50,12 @@ router.get('/result', function (req, res, next) {
 	let resource = stkResource
 
 	if (resource != null) {
-		res.render('stkresult', {
-			origination_time: resource.event.resource.origination_time,
-			sender_msisdn: resource.event.resource.sender_msisdn,
-			amount: resource.event.resource.amount,
-			currency: resource.event.resource.currency,
-			till_number: resource.event.resource.till_number,
-			name: resource.event.resource.sender_first_name,
-			status: resource.event.resource.status,
-			system: resource.event.resource.system
+		res.render('result', {
+			resource: JSON.stringify(resource, null, 2)
 		})
 	} else {
 		console.log('STK push result not yet posted')
-		res.render('stkresult', { error: 'STK push result not yet posted' })
+		res.render('result', { error: 'STK push result not yet posted' })
 	}
 })
 
@@ -83,7 +76,7 @@ router.post('/receive', function (req, res, next) {
 			notes: 'Payment for invoice 123456'
 		},
 		// This is where once the request is completed kopokopo will post the response
-		callbackUrl: 'http://localhost:8000/stk/requestresponse',
+		callbackUrl: 'http://localhost:8000/stk/result',
 
 		accessToken: token_details.access_token
 	}
@@ -113,7 +106,7 @@ router.post('/status', function (req, res, next) {
 	StkService
 		.paymentRequestStatus({ accessToken: token_details.access_token, location: req.body.location })
 		.then(response => {
-			return res.render('response', { message: 'STK status is: ' + response })
+			return res.render('response', { message: 'STK status is: ' + JSON.stringify(response, null, 2) })
 		})
 		.catch(error => {
 			console.log(error)

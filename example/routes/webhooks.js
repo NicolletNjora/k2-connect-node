@@ -11,9 +11,8 @@ const options = {
 var K2 = require('k2-connect-node')(options)
 var Webhooks = K2.Webhooks
 var tokens = K2.TokenService
-var buyGoodsResource
-var customerResource
-var reversalResource
+var buyGoodsResource, b2bResource, reversalResource
+var customerResource, transferResource, m2mResource
 var token_details
 
 tokens
@@ -32,8 +31,9 @@ router.post('/', function (req, res, next) {
 	// // console.log(JSON.stringify(req.body))
 	// console.log(req.get('X-kopokopo-signature'))
 	// console.log("and end here")
+	webhookSecret =  process.env.BUYGOODS_WEBHOOK_SECRET
 	Webhooks
-		.webhookHandler(req, res)
+		.webhookHandler(req, res, webhookSecret)
 		.then(response => {
 			buyGoodsResource = response
 		})
@@ -42,9 +42,46 @@ router.post('/', function (req, res, next) {
 		})
 })
 
+router.post('/result', function (req, res, next) {
+	// console.log("I start here")
+	// // console.log(JSON.stringify(req.body))
+	// console.log(req.get('X-kopokopo-signature'))
+	// console.log("and end here")
+	Webhooks
+		.webhookHandler(req, res, process.env.K2_CLIENT_SECRET)
+		.then(response => {
+			buyGoodsResource = response
+		})
+		.catch(error => {
+			console.log(error)
+		})
+})
+
+router.post('/b2breceived', function (req, res, next) {
+	Webhooks
+		.webhookHandler(req, res, process.env.BUYGOODS_WEBHOOK_SECRET)
+		.then(response => {
+			b2bResource = response
+		})
+		.catch(error => {
+			console.log(error)
+		})
+})
+
+router.post('/m2mreceived', function (req, res, next) {
+	Webhooks
+		.webhookHandler(req, res, process.env.BUYGOODS_WEBHOOK_SECRET)
+		.then(response => {
+			m2mResource = response
+		})
+		.catch(error => {
+			console.log(error)
+		})
+})
+
 router.post('/customercreated', function (req, res, next) {
 	Webhooks
-		.webhookHandler(req, res)
+		.webhookHandler(req, res, process.env.BUYGOODS_WEBHOOK_SECRET)
 		.then(response => {
 			customerResource = response
 		})
@@ -53,9 +90,9 @@ router.post('/customercreated', function (req, res, next) {
 		})
 })
 
-router.post('/transactionreversed', function (req, res, next) {
+router.post('/buygoodsreversed', function (req, res, next) {
 	Webhooks
-		.webhookHandler(req, res)
+		.webhookHandler(req, res, process.env.BUYGOODS_WEBHOOK_SECRET)
 		.then(response => {
 			reversalResource = response
 		})
@@ -64,57 +101,98 @@ router.post('/transactionreversed', function (req, res, next) {
 		})
 })
 
-router.get('/customerresource', function (req, res, next) {
+router.post('/transfercompleted', function (req, res, next) {
+	Webhooks
+		.webhookHandler(req, res, process.env.BUYGOODS_WEBHOOK_SECRET)
+		.then(response => {
+			transferResource = response
+		})
+		.catch(error => {
+			console.log(error)
+		})
+})
+
+router.get('/b2breceived', function (req, res, next) {
+	let resource = b2bResource
+
+	if (resource != null) {
+		res.render('webhookresource', {
+			resourceType: "B2b received",
+			resource: JSON.stringify(resource, null, 2)
+		})
+	} else {
+		console.log('Resource not yet created')
+		res.render('webhookresource', { error: 'Resource not yet created' })
+	}
+})
+
+router.get('/m2mreceived', function (req, res, next) {
+	let resource = m2mResource
+
+	if (resource != null) {
+		res.render('webhookresource', {
+			resourceType: "M2m received",
+			resource: JSON.stringify(resource, null, 2)
+		})
+	} else {
+		console.log('Resource not yet created')
+		res.render('webhookresource', { error: 'Resource not yet created' })
+	}
+})
+
+router.get('/customercreated', function (req, res, next) {
 	let resource = customerResource
 
 	if (resource != null) {
-		res.render('customerresource', {
-			sender_msisdn: resource.event.resource.msisdn,
-			name: resource.event.resource.first_name
+		res.render('webhookresource', {
+			resourceType: "Customer created",
+			resource: JSON.stringify(resource, null, 2)
 		})
 	} else {
 		console.log('Resource not yet created')
-		res.render('customerresource', { error: 'Resource not yet created' })
+		res.render('webhookresource', { error: 'Resource not yet created' })
 	}
 })
 
-router.get('/reversalresource', function (req, res, next) {
+router.get('/transfercompleted', function (req, res, next) {
+	let resource = transferResource
+
+	if (resource != null) {
+		res.render('webhookresource', {
+			resourceType: "Transfer Completed",
+			resource: JSON.stringify(resource, null, 2)
+		})
+	} else {
+		console.log('Resource not yet created')
+		res.render('webhookresource', { error: 'Resource not yet created' })
+	}
+})
+
+router.get('/buygoodsreversed', function (req, res, next) {
 	let resource = reversalResource
 
 	if (resource != null) {
-		res.render('reversalresource', {
-			origination_time: resource.event.resource.origination_time,
-			sender_msisdn: resource.event.resource.sender_msisdn,
-			amount: resource.event.resource.amount,
-			currency: resource.event.resource.currency,
-			till_number: resource.event.resource.till_number,
-			name: resource.event.resource.sender_first_name + resource.event.resource.sender_middle_name + resource.event.resource.sender_last_name ,
-			status: resource.event.resource.status,
-			system: resource.event.resource.system
+		res.render('webhookresource', {
+			resourceType: "Buygoods reversed",
+			resource: JSON.stringify(resource, null, 2)
 		})
 	} else {
 		console.log('Resource not yet created')
-		res.render('reversalresource', { error: 'Resource not yet created' })
+		res.render('webhookresource', { error: 'Resource not yet created' })
 	}
 })
 
-router.get('/resource', function (req, res, next) {
+router.get('/buygoodsreceived', function (req, res, next) {
 	let resource = buyGoodsResource
 
 	if (resource != null) {
-		res.render('resource', {
-			origination_time: resource.event.resource.origination_time,
-			sender_msisdn: resource.event.resource.sender_msisdn,
-			amount: resource.event.resource.amount,
-			currency: resource.event.resource.currency,
-			till_number: resource.event.resource.till_number,
-			name: resource.event.resource.sender_first_name + resource.event.resource.sender_middle_name + resource.event.resource.sender_last_name ,
-			status: resource.event.resource.status,
-			system: resource.event.resource.system
+		res.render('webhookresource', {
+			resourceType: "Buygoods received",
+			resource: JSON.stringify(resource, null, 2)
 		})
 	} else {
 		console.log('Resource not yet created')
-		res.render('resource', { error: 'Resource not yet created' })
+		res.render('webhookresource', { error: 'Resource not yet created' })
 	}
 })
 
@@ -126,7 +204,7 @@ router.get('/subscribe', function (req, res, next) {
 router.post('/subscribe', function (req, res, next) {
 	const subscribeOptions = {
 		eventType: req.body.event_type,
-		url: req.body.url,
+		url: req.body.url,  
 		webhookSecret: process.env.BUYGOODS_WEBHOOK_SECRET,
 		accessToken: token_details.access_token,
 		scope: "Till",

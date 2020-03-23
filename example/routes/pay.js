@@ -10,6 +10,9 @@ const options = {
 // Including the k2-connect-node module
 var K2 = require('k2-connect-node')(options)
 var PayService = K2.PayService
+var Webhooks = K2.Webhooks
+
+var payResource
 
 // Put in another file and import when needed
 var tokens = K2.TokenService
@@ -29,6 +32,32 @@ router.get('/', function (req, res, next) {
 	res.render('pay', res.locals.commonData)
 })
 
+router.post('/result', function (req, res, next) {
+	// Send message and capture the response or error
+	Webhooks
+		.webhookHandler(req, res, process.env.K2_CLIENT_SECRET)
+		.then(response => {
+			payResource = response
+			console.log(response)
+		})
+		.catch(error => {
+			console.log(error)
+		})
+})
+
+router.get('/result', function (req, res, next) {
+	let resource = payResource
+
+	if (resource != null) {
+		res.render('result', {
+			resource: JSON.stringify(resource, null, 2)
+		})
+	} else {
+		console.log('Pay result not yet posted')
+		res.render('result', { error: 'Pay result not yet posted' })
+	}
+})
+
 router.post('/', function (req, res, next) {
 	var payOpts = {
 		destination: req.body.destination,
@@ -38,7 +67,7 @@ router.post('/', function (req, res, next) {
 			customer_id: '8675309',
 			notes: 'Salary payment for May 2018'
 		},
-		callbackUrl: 'https://your-call-bak.yourapplication.com/payment_result',
+		callbackUrl: 'http://localhost:8000/pay/result',
 		accessToken: token_details.access_token
 	}
 

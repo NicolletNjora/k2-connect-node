@@ -10,6 +10,9 @@ const options = {
 // Including the k2-connect-node module
 var K2 = require('k2-connect-node')(options)
 var TransferService = K2.TransferService
+var Webhooks = K2.Webhooks
+
+var transferResource
 
 // Put in another file and import when needed
 var tokens = K2.TokenService
@@ -33,8 +36,10 @@ router.post('/', function (req, res, next) {
 	var transferOpts = {
 		amount : req.body.amount,
 		currency: 'KES',
-		destination: req.body.destination,
-		accessToken: token_details.access_token
+		destinationType: req.body.destinationType,
+		destinationReference: req.body.destinationReference,
+		accessToken: token_details.access_token,
+		callbackUrl: "http://localhost:8000/transfer/result"
 	}
 
 	// Send message and capture the response or error
@@ -49,12 +54,38 @@ router.post('/', function (req, res, next) {
 		})
 })
 
+router.post('/result', function (req, res, next) {
+	// Send message and capture the response or error
+	Webhooks
+		.webhookHandler(req, res, process.env.K2_CLIENT_SECRET)
+		.then(response => {
+			transferResource = response
+		})
+		.catch(error => {
+			console.log(error)
+		})
+})
+
+router.get('/result', function (req, res, next) {
+	let resource = transferResource
+
+	if (resource != null) {
+		res.render('result', {
+			resource: JSON.stringify(resource, null, 2)
+		})
+	} else {
+		console.log('Transfer result not yet posted')
+		res.render('result', { error: 'Transfer result not yet posted' })
+	}
+})
+
 router.post('/createsettlement', function (req, res, next) {
 	var settlementAccountOpts = {
 		accountName: req.body.accountName,
 		bankId: req.body.bankId,
 		bankBranchId: req.body.bankBranchId,
 		accountNumber: req.body.accountNumber,
+		callbackUrl: 'http://localhost:8000/transfer/result',
 		accessToken: token_details.access_token
 	}
 
@@ -85,7 +116,7 @@ router.post('/status', function (req, res, next) {
 	TransferService
 		.settlementStatus({ accessToken: token_details.access_token, location: req.body.location })
 		.then(response =>{
-			return res.render('response', { message: 'Transfer status is: ' + response })
+			return res.render('response', { message: 'Status is: ' + JSON.stringify(response, null, 2) })
 		})
 		.catch(error => {
 			console.log(error)
