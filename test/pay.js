@@ -85,28 +85,46 @@ describe('PayService', function () {
 		})
 
 		describe('addPayRecipient() account validation', function () {	
-			it('#addPayRecipient() account has to have name', function () {
+			it('#addPayRecipient() account has to have first name', function () {
 				var opts = {}
 	
 				opts.type = 'bank_account'
+				opts.lastName = 'Doe'
 				opts.accountName = 'Jane Doe'
-				opts.bankRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
-				opts.bankBranchRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankBranchId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
 				opts.accountNumber = '123456789'
 				opts.email = 'janedoe@nomail.net'
 				opts.phone = '+2547012345678'
 				opts.accessToken= 'hardToGuessKey'
 
-				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'Name can\'t be blank; ' })
+				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'First name can\'t be blank; ' })
+			})
+
+			it('#addPayRecipient() account has to have last name', function () {
+				var opts = {}
+	
+				opts.type = 'bank_account'
+				opts.firstName = 'Jane'
+				opts.accountName = 'Jane Doe'
+				opts.bankId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankBranchId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.accountNumber = '123456789'
+				opts.email = 'janedoe@nomail.net'
+				opts.phone = '+2547012345678'
+				opts.accessToken= 'hardToGuessKey'
+
+				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'Last name can\'t be blank; ' })
 			})
 
 			it('#addPayRecipient() account has to have accountName', function () {
 				var opts = {}
 	
 				opts.type = 'bank_account'
-				opts.name = 'Jane Doe'
-				opts.bankRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
-				opts.bankBranchRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.firstName = 'Jane'
+				opts.lastName = 'Doe'
+				opts.bankId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankBranchId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
 				opts.accountNumber = '123456789'
 				opts.email = 'janedoe@nomail.net'
 				opts.phone = '+2547012345678'
@@ -115,44 +133,47 @@ describe('PayService', function () {
 				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'Account name can\'t be blank; ' })
 			})
 
-			it('#addPayRecipient() account has to have bankRef', function () {
+			it('#addPayRecipient() account has to have bankId', function () {
 				var opts = {}
 	
 				opts.type = 'bank_account'
-				opts.name = 'Jane Doe'
+				opts.firstName = 'Jane'
+				opts.lastName = 'Doe'
 				opts.accountName = 'Jane Doe'
-				opts.bankBranchRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankBranchId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
 				opts.accountNumber = '123456789'
 				opts.email = 'janedoe@nomail.net'
 				opts.phone = '+2547012345678'
 				opts.accessToken= 'hardToGuessKey'
 
-				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'Bank ref can\'t be blank; ' })
+				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'Bank id can\'t be blank; ' })
 			})
 
-			it('#addPayRecipient() account has to have bankBranchRef', function () {
+			it('#addPayRecipient() account has to have bankBranchId', function () {
 				var opts = {}
 	
 				opts.type = 'bank_account'
-				opts.name = 'Jane Doe'
+				opts.firstName = 'Jane'
+				opts.lastName = 'Doe'
 				opts.accountName = 'Jane Doe'
-				opts.bankRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
 				opts.accountNumber = '123456789'
 				opts.email = 'janedoe@nomail.net'
 				opts.phone = '+2547012345678'
 				opts.accessToken= 'hardToGuessKey'
 
-				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'Bank branch ref can\'t be blank; ' })
+				return pay.addPayRecipient(opts).should.be.rejectedWith(Error, { message: 'Bank branch id can\'t be blank; ' })
 			})
 
 			it('#addPayRecipient() account has to have accountNumber', function () {
 				var opts = {}
 	
 				opts.type = 'bank_account'
-				opts.name = 'Jane Doe'
+				opts.firstName = 'Jane'
+				opts.lastName = 'Doe'
 				opts.accountName = 'Jane Doe'
-				opts.bankRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
-				opts.bankBranchRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankBranchId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
 				opts.email = 'janedoe@nomail.net'
 				opts.phone = '+2547012345678'
 				opts.accessToken= 'hardToGuessKey'
@@ -164,10 +185,11 @@ describe('PayService', function () {
 				var opts = {}
 	
 				opts.type = 'bank_account'
-				opts.name = 'Jane Doe'
+				opts.firstName = 'Jane'
+				opts.lastName = 'Doe'
 				opts.accountName = 'Jane Doe'
-				opts.bankRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
-				opts.bankBranchRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+				opts.bankBranchId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
 				opts.accountNumber = '123456789'
 				opts.email = 'janedoe@nomail.net'
 				opts.phone = '+2547012345678'
@@ -199,10 +221,11 @@ describe('PayService', function () {
 			var opts = {}
 	
 			opts.type = 'bank_account'
-			opts.name = 'Jane Doe'
+			opts.firstName = 'Jane'
+			opts.lastName = 'Doe'
 			opts.accountName = 'Jane Doe'
-			opts.bankRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
-			opts.bankBranchRef = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+			opts.bankId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
+			opts.bankBranchId = 'c7f300c0-f1ef-4151-9bbe-005005aa3747'
 			opts.accountNumber = '123456789'
 			opts.email = 'janedoe@nomail.net'
 			opts.phone = '+2547012345678'

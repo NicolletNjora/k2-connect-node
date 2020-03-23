@@ -18,7 +18,7 @@ describe('TransferService', function () {
 	describe('settleFunds()', function () {
 		beforeEach(() => {
 			nock(configs.TEST_ACCOUNT.baseUrl)
-				.post('/api/'+configs.version+'/transfers')
+				.post('/api/'+configs.version+'/settlement_transfers')
 				.reply(201, {}, response.location)
 		})
 
@@ -27,7 +27,8 @@ describe('TransferService', function () {
 			it('#settleFunds() has to have a currency', function () {
 				var opts = {}
 				opts.amount = 200
-				opts.destination = 'my_destination'
+				opts.destinationType = 'merchant_bank_account'
+				opts.destinationReference = 'aseufiabd'
 				opts.accessToken = 'hardToGuessKey'
 
 				return transfer.settleFunds(opts)
@@ -37,7 +38,8 @@ describe('TransferService', function () {
 			it('#settleFunds() has to have an amount', function () {
 				var opts = {}
 				opts.currency = 'KES'
-				opts.destination = 'my_destination'
+				opts.destinationType = 'merchant_bank_account'
+				opts.destinationReference = 'aseufiabd'
 				opts.accessToken = 'hardToGuessKey'
 
 				return transfer.settleFunds(opts)
@@ -48,7 +50,8 @@ describe('TransferService', function () {
 				var opts = {}
 				opts.currency = 'KES'
 				opts.amount = 200
-				opts.destination = 'my_destination'
+				opts.destinationType = 'merchant_bank_account'
+				opts.destinationReference = 'aseufiabd'
 
 				return transfer.settleFunds(opts)
 					.should.be.rejectedWith(Error, { message: 'Access token can\'t be blank; ' })
@@ -60,7 +63,8 @@ describe('TransferService', function () {
 			it('#settleFunds() currency has to be a string', function () {
 				opts.currency = 3
 				opts.amount = 200
-				opts.destination = 'my_destination'
+				opts.destinationType = 'merchant_bank_account'
+				opts.destinationReference = 'aseufiabd'
 				opts.accessToken = 'hardToGuessKey'
 
 				return transfer.settleFunds(opts)
@@ -70,7 +74,8 @@ describe('TransferService', function () {
 			it('#settleFunds() amount has to be an integer', function () {
 				opts.currency = 'KES'
 				opts.amount = 'Two hundred'
-				opts.destination = 'my_destination'
+				opts.destinationType = 'merchant_bank_account'
+				opts.destinationReference = 'aseufiabd'
 				opts.accessToken = 'hardToGuessKey'
 
 				return transfer.settleFunds(opts)
@@ -80,27 +85,54 @@ describe('TransferService', function () {
 			it('#settleFunds() amount has to be more than 50', function () {
 				opts.currency = 'KES'
 				opts.amount = 20
-				opts.destination = 'my_destination'
+				opts.destinationType = 'merchant_bank_account'
+				opts.destinationReference = 'aseufiabd'
 				opts.accessToken = 'hardToGuessKey'
 
 				return transfer.settleFunds(opts)
 					.should.be.rejectedWith(Error, { message: 'Amount must be greater than 50; ' })
 			})
 
-			it('#settleFunds() destination has to be a string', function () {
+			it('#settleFunds() destination type has to be a string', function () {
 				opts.currency = 'KES'
 				opts.amount = 200
-				opts.destination = 2
+				opts.destinationType = 2
+				opts.destinationReference = 'aseufiabd'
 				opts.accessToken = 'hardToGuessKey'
 
 				return transfer.settleFunds(opts)
-					.should.be.rejectedWith(Error, { message: 'Destination must be a string; ' })
+					.should.be.rejectedWith(Error, { message: 'Destination type must be a string; ' })
+			})
+
+			it('#settleFunds() destination reference has to be a string', function () {
+				opts.currency = 'KES'
+				opts.amount = 200
+				opts.destinationType = 'merchant_bank_account'
+				opts.destinationReference = 1
+				opts.accessToken = 'hardToGuessKey'
+
+				return transfer.settleFunds(opts)
+					.should.be.rejectedWith(Error, { message: 'Destination reference must be a string; ' })
 			})
 		})
-		it('#settleFunds() succeeds', () => {
+		it('#settleFunds() blind transfer succeeds', () => {
 			var opts = {}
 	
-			opts.destination = 'my_destination'
+			opts.currency = 'KES'
+			opts.amount = 200
+			opts.accessToken = 'hardToGuessKey'
+	
+			return transfer.settleFunds(opts).then(response => {
+				expect(response).to.equal('https://api-sandbox.kopokopo.com/transfers/d76265cd-0951-e511-80da-0aa34a9b2388')
+			})
+				
+		})
+		
+		it('#settleFunds() targetted transfer succeeds', () => {
+			var opts = {}
+	
+			opts.destinationType = 'merchant_bank_account'
+			opts.destinationReference = 'aseufiabd'
 			opts.currency = 'KES'
 			opts.amount = 200
 			opts.accessToken = 'hardToGuessKey'
